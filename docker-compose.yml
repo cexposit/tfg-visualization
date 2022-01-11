@@ -1,20 +1,10 @@
 version: '3.7'
 services: 
-  frontend:
-    build:
-      context: "./my-frontend"
-      dockerfile: Dockerfile
-    image: kaizten/my-frontend
-    container_name: "my-frontend"
-    ports:
-      - "8081:80"
-    networks:
-      - app
   backend:
     build:
       context: "./server-websocket"
       dockerfile: Dockerfile
-    image: kaizten/server-websocket
+    image: DOMINIO/server-websocket
     container_name: "server-websocket"
     environment:
       POSTGRES_USER: postgres
