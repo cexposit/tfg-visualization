@@ -40,7 +40,7 @@ services:
       - app
 volumes:
   my-app:
-    name: edgar-figueroa-gonzalez-volume
+    name: my-volume
 networks:
   app:
     name: app_docker
