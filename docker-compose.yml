@@ -1,0 +1,46 @@
+version: '3.7'
+services: 
+  frontend:
+    build:
+      context: "./my-frontend"
+      dockerfile: Dockerfile
+    image: kaizten/my-frontend
+    container_name: "my-frontend"
+    ports:
+      - "8081:80"
+    networks:
+      - app
+  backend:
+    build:
+      context: "./server-websocket"
+      dockerfile: Dockerfile
+    image: kaizten/server-websocket
+    container_name: "server-websocket"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DATABASE: postgres
+      POSTGRES_HOST: timescaledb
+    ports:
+      - "8181:8181"
+    networks:
+      - app
+  dbtimescale:
+    image: timescale/timescaledb:2.1.1-pg13  
+    container_name: "timescaledb"
+    volumes:
+      - my-app:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DATABASE: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - app
+volumes:
+  my-app:
+    name: edgar-figueroa-gonzalez-volume
+networks:
+  app:
+    name: app_docker
