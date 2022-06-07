@@ -4,7 +4,7 @@ services:
     build:
       context: "./server-websocket"
       dockerfile: Dockerfile
-    image: DOMINIO/server-websocket
+    image: sergi0dev/repo:latest
     container_name: "server-websocket"
     environment:
       POSTGRES_USER: postgres
