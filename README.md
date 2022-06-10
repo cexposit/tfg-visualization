@@ -51,3 +51,9 @@ Además, puede existir la posibilidad que en el mismo instante de tiempo, se rec
 "{\"min\":8,\"max\":15}"
 ```
 
+# Funcionamiento del Generador del JSON
+
+Para generar ejemplos de JSON para hacer pruebas, se ha desarrollado un ejecutable en python para crear ficheros de ejemplo. Su uso es el siguiente.
+ ```bash
+ python3 json_generator.py <nombre_salida_fichero.json> <numero_maximo_horas> <numero_maximo_entidades>
+ ```
