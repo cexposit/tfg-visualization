@@ -1,9 +1,9 @@
 version: '3.7'
 services: 
   backend:
-    build:
-      context: "./server-websocket"
-      dockerfile: Dockerfile
+    # build:
+    #   context: "./server-websocket"
+    #   dockerfile: Dockerfile
     image: sergi0dev/repo:latest
     container_name: "server-websocket"
     environment:
@@ -19,7 +19,7 @@ services:
     image: timescale/timescaledb:2.1.1-pg13  
     container_name: "timescaledb"
     volumes:
-      - my-app:/var/lib/postgresql/data
+      - ./postgresData:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password

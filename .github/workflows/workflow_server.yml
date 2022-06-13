@@ -25,10 +25,10 @@ jobs:
         run: docker build -t app .
       - name: Tags
         run: |
-          docker tag app ${{ secrets.DOCKERHUB_USERNAME }}/repo:latest
+          docker tag app ${{ secrets.DOCKERHUB_USERNAME }}/tfg_visualization:latest
       - name: Push
         run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/repo:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/tfg_visualization:latest
 
         # uses: mr-smithers-excellent/docker-build-push@v5
         # with:
