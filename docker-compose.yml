@@ -4,7 +4,7 @@ services:
     # build:
     #   context: "./server-websocket"
     #   dockerfile: Dockerfile
-    image: sergi0dev/repo:latest
+    image: softwarebuild/repo:latest
     container_name: "server-websocket"
     environment:
       POSTGRES_USER: postgres
@@ -15,6 +15,8 @@ services:
       - "8181:8181"
     networks:
       - app
+    depends_on:
+      - dbtimescale
   dbtimescale:
     image: timescale/timescaledb:2.1.1-pg13  
     container_name: "timescaledb"

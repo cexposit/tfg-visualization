@@ -8,7 +8,8 @@
 
 <script>
 //import { file } from '@babel/types';
-import HeaderWeb from './components/Header.vue'
+import HeaderWeb from './components/HeaderWeb.vue'
+const connection = new WebSocket("ws://localhost:8181/")
 
 export default {
   name: 'App',
@@ -26,11 +27,10 @@ export default {
       var fileReader = new FileReader();
 
       fileReader.onload = function(fileLoadEvent){
-        // this.connection = new WebSocket("ws://localhost:8181/")
           var fileContent = fileLoadEvent.target.result;
             console.log(fileContent)
-            console.log(this.connection)
-            // this.connection.send(fileContent);
+            console.log(connection)
+            connection.send(fileContent);
       }
 
       fileReader.readAsText(fileUploaded, "UTF-8")
@@ -38,14 +38,14 @@ export default {
   },
   created: function() {
     console.log("Starting connection")
-    this.connection = new WebSocket("ws://localhost:8181/")
 
-    this.connection.onopen = function(event) {
+
+    connection.onopen = function(event) {
       console.log(event)
       console.log("Succesfully connected")
     }
 
-    this.connection.onmessage = function(event) {
+    connection.onmessage = function(event) {
       console.log(event)
     }
   }

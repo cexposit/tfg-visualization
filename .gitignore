@@ -2,3 +2,4 @@ node_modules
 generador/*.json
 generador/*.txt
 .env
+postgresData
