@@ -53,7 +53,18 @@ Además, puede existir la posibilidad que en el mismo instante de tiempo, se rec
 
 # Funcionamiento del Generador del JSON
 
-Para generar ejemplos de JSON para hacer pruebas, se ha desarrollado un ejecutable en python para crear ficheros de ejemplo. Su uso es el siguiente.
+Para generar ejemplos de JSON para hacer pruebas, se ha desarrollado un ejecutable en python para crear ficheros de ejemplo. 
+Es necesario tener instalado la librería `numpy` para poder ejecutar el fichero:
+
  ```bash
- python3 json_generator.py <nombre_salida_fichero.json> <numero_maximo_horas> <numero_maximo_entidades>
+pip3 install numpy
+ ```
+Su uso es el siguiente:
+ ```bash
+python3 generador.py -s fichero.json -i 2020-10-01 00:00:00 -f 2022-12-01 10:00:00 -t 1 y -e 2 -v 2 -a 2 2021-01-01 20:00:00
+ ```
+Si se quiere ver una guía de los argumentos necesarios y opcionales que se tienen que usar se pueden ver usando el argumento `-h` o `--Help`
+
+ ```bash
+python3 generador.py -h
  ```
