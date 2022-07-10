@@ -1,64 +1,33 @@
 <template>
-  <HeaderWeb />
-  <p>
-    <input type="file" id="File">
-  </p>
-  <button v-on:click="ReadFichero">Subir Archivo</button>
+   <v-main>
+      <HeaderWeb />
+      <WebForms />
+      <ShowData />
+    </v-main>
 </template>
 
 <script>
-//import { file } from '@babel/types';
-import HeaderWeb from './components/HeaderWeb.vue'
-const connection = new WebSocket("ws://localhost:8181/")
+import WebForms from './components/WebForms';
+import HeaderWeb from './components/Header';
+import ShowData from './components/Visualizacion';
+import { mapActions } from 'vuex';
+
 
 export default {
   name: 'App',
+
   components: {
-    HeaderWeb
+    WebForms,
+    HeaderWeb,
+    ShowData
   },
-  data: function() {
-    return {
-      connection: null
-    }
-  },
+
   methods: {
-    ReadFichero: function() {
-      var fileUploaded = document.getElementById("File").files[0];
-      var fileReader = new FileReader();
-
-      fileReader.onload = function(fileLoadEvent){
-          var fileContent = fileLoadEvent.target.result;
-            console.log(fileContent)
-            console.log(connection)
-            connection.send(fileContent);
-      }
-
-      fileReader.readAsText(fileUploaded, "UTF-8")
-    }
+    ...mapActions(['initialize'])
   },
+  
   created: function() {
-    console.log("Starting connection")
-
-
-    connection.onopen = function(event) {
-      console.log(event)
-      console.log("Succesfully connected")
-    }
-
-    connection.onmessage = function(event) {
-      console.log(event)
-    }
-  }
-}
+    this.initialize()
+  },
+};
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>

@@ -1,5 +1,6 @@
 node_modules
-generador/*.json
-generador/*.txt
 .env
 postgresData
+data-upload.js
+no_subir
+no_subir/*
