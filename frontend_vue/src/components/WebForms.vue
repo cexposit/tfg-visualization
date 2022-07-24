@@ -25,8 +25,8 @@
           <v-col cols="12" md="6">
             <v-form ref="form">
               <v-autocomplete 
-                v-model="current_table"
-                :items="table_names"
+                v-model="current_scheme"
+                :items="scheme_names"
                 label="Esquemas"
               />
             </v-form>
@@ -55,16 +55,16 @@ export default {
       last_date: '',
       include_fd: false,
       include_ld: false,
-      table_names: this.get_name_tables(), 
+      scheme_names: this.get_name_schemes(), 
       // isDisabled: this.btn_disabled(),  
-      current_table: null
+      current_scheme: null
     }
   },
   
   methods: {
     submit() {
       let obj = {
-        "table": this.current_table,
+        "scheme": this.current_scheme,
         "min": this.first_date,
         "include_min": this.include_fd,
         "max": this.last_date,
@@ -80,7 +80,7 @@ export default {
 
     ...mapGetters([
       'get_ws',
-      'get_name_tables',
+      'get_name_schemes',
       'get_btn'
     ]), 
     ...mapActions([

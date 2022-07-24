@@ -9,7 +9,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DATABASE: postgres
+      POSTGRES_DB: db_view_data
       POSTGRES_HOST: timescaledb
     ports:
       - "8181:8181"
@@ -25,7 +25,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DATABASE: postgres
+      POSTGRES_DB: db_view_data
     ports:
       - "5432:5432"
     networks:

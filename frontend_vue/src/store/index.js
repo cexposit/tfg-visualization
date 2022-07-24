@@ -5,13 +5,13 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     ws_connection: new WebSocket("ws://localhost:8181/"),
-    tables_db: [],
+    schemes_db: [],
     data: [],
     // btn_disabled: false
   },
   mutations: {
-    update_tables(state, payload) {
-      state.tables_db.push(payload)
+    update_schemes(state, payload) {
+      state.schemes_db.push(payload)
     },
 
     send_data(state, payload) {
@@ -20,7 +20,7 @@ export default new Vuex.Store({
     },
 
     save_data(state, payload){
-      console.log("el payload bobo: ", payload)
+      console.log("el payload: ", payload)
       // let keys = Object.keys(state.data)
       state.data.push(payload)
     },
@@ -34,8 +34,8 @@ export default new Vuex.Store({
     get_ws: function (state) {
       return state.ws_connection
     },
-    get_name_tables: function (state) {
-      return state.tables_db
+    get_name_schemes: function (state) {
+      return state.schemes_db
     },
     get_btn: function (state) {
       return state.btn_disabled
@@ -64,9 +64,9 @@ export default new Vuex.Store({
 
         // isArray
         if (objeto.length != undefined){
-          if (objeto[0].type == "name_tables" ) {
+          if (objeto[0].type == "name_schemes" ) {
             for (let index = 0; index < objeto.length; index++) {
-              commit('update_tables', objeto[index].table_name)
+              commit('update_schemes', objeto[index].schemename_user)
               // getters.get_name_tables("get_tables", objeto[index].table_name);
               // db_tables.push();
             }
@@ -105,7 +105,6 @@ export default new Vuex.Store({
   //   newRow["type"]="query"
 
   //   const data = (JSON.stringify(newRow));
-  //   console.log("aqui está la data: ", data)
   //   client.ws.send(data, index);
   //   currentIndex++;
   //   if (currentIndex == row.length) clearInterval(Intervalo)
