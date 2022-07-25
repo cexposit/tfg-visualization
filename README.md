@@ -31,7 +31,7 @@ node data-upload.js <file.json> <postgres> <postgres> <password> <localhost>
 Un ejemplo de mensaje sería el siguiente:
 
 ```json
-{ name: "data", json: "{\"data\": [{\"time\": \"2020-01-01 00:00:00\", \"status\": [{\"new\": [{\"id\": \"1\", \"value\": {\"peso\": 82, \"altura\": 90}}, {\"id\": \"2\", \"value\": {\"peso\": 41, \"altura\": 82}}, {\"id\": \"3\", \"value\": {\"peso\": 49, \"altura\": 76}}]}]}, {\"time\": \"2029-01-01 00:00:00\", \"status\": [{\"new\": [{\"id\": \"4\", \"value\": {\"peso\": 3, \"altura\": 59}}], \"delete\": [{\"id\": \"1\", \"value\": {\"peso\": 10, \"altura\": 19}}]}]}]}" }
+{ "name": "data", "json": "{\"data\": [{\"time\": \"2020-01-01 00:00:00\", \"status\": [{\"new\": [{\"id\": \"1\", \"value\": {\"peso\": 82, \"altura\": 90}}, {\"id\": \"2\", \"value\": {\"peso\": 41, \"altura\": 82}}, {\"id\": \"3\", \"value\": {\"peso\": 49, \"altura\": 76}}]}]}, {\"time\": \"2029-01-01 00:00:00\", \"status\": [{\"new\": [{\"id\": \"4\", \"value\": {\"peso\": 3, \"altura\": 59}}], \"delete\": [{\"id\": \"1\", \"value\": {\"peso\": 10, \"altura\": 19}}]}]}]}" }
 ```
 
 
