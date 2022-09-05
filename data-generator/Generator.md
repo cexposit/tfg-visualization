@@ -30,6 +30,7 @@ you can see all available arguments in the next list:
 | -prbn --probability_new | Optional | Optional, declare the probability to add a new entity when a event happens |
 | -prbu --probability_update | Optional | Optional, declare the probability to update an entity when a event happens |
 | -prbd --probability_delete | Optional | Optional, declare the probability to delete an entity when a event happens |
+| -fi --first_id | Optional | Optional, declare the first id to use|
 | -ty --times_year | Optional | Declare the min (required) and max (optional) amount of time to an event happens in years |
 | -tm --times_month | Optional | Declare the min (required) and max (optional) amount of time to an event happens in months |
 | -td --times_day | Optional | Declare the min (required) and max (optional) amount of time to an event happens in days |

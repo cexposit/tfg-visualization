@@ -5,27 +5,24 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     ws_connection: new WebSocket("ws://localhost:8181/"),
+    sizedata_from_server: 0,
     schemes_db: [],
     data: [],
-    // btn_disabled: false
   },
   mutations: {
     update_schemes(state, payload) {
       state.schemes_db.push(payload)
     },
-
+    update_sizedata_from_server(state, payload) {
+      state.sizedata_from_server += payload
+    },
     send_data(state, payload) {
-      // state.btn_disabled = true
       state.ws_connection.send(payload)
     },
-
-    save_data(state, payload){
-      console.log("el payload: ", payload)
-      // let keys = Object.keys(state.data)
+    save_data(state, payload) {
       state.data.push(payload)
     },
-
-    enable_btn(state){
+    enable_btn(state) {
       state.btn_disabled = false
     }
   },
@@ -42,72 +39,37 @@ export default new Vuex.Store({
     },
     get_data: function (state) {
       return state.data
+    },
+    get_sizedata_from_server: function (state) {
+      return state.sizedata_from_server
     }
   },
 
   actions: {
+
     initialize({ commit, getters }) {
       let connection = getters.get_ws
-
       connection.onopen = function (event) {
         console.log(event)
         console.log("Succesfully connected")
       }
-
-      
       connection.onmessage = function (event) {
-        // const data = new FormData()
         var objeto = JSON.parse(event.data)
-        console.log("Starting connection")
-        console.log(objeto)
-        
 
-        // isArray
-        if (objeto.length != undefined){
-          if (objeto[0].type == "name_schemes" ) {
-            for (let index = 0; index < objeto.length; index++) {
-              commit('update_schemes', objeto[index].schemename_user)
-              // getters.get_name_tables("get_tables", objeto[index].table_name);
-              // db_tables.push();
-            }
+        if (objeto[0] && objeto[0].type == "name_schemes") {
+          for (let index = 0; index < objeto.length; index++) {
+            commit('update_schemes', objeto[index].schemename_user)
           }
         }
-        else{
-          if (objeto.type == "query") {
-            console.log("las querys")
-            commit('save_data', objeto)
-          }
-  
-          if (objeto.type == "filters") {
-            console.log("los filtros")
-            // commit('enable_btn')
-            // commit(save_data)
-          }
+        else {
+          commit('save_data', objeto)
         }
-
-        // vm.$store.commit("get_tables", db_tables);
-        // console.log(db_tables)
       }
     },
-    send_to_back({commit}, data) {
+
+    send_to_back({ commit }, data) {
       commit('send_data', data)
     }
-    },
+  },
+})
 
-
-
-
-  })
-
-
-  // var Intervalo = setInterval(function(){
-  //   const newRow = row[currentIndex]
-  //   newRow["type"]="query"
-
-  //   const data = (JSON.stringify(newRow));
-  //   client.ws.send(data, index);
-  //   currentIndex++;
-  //   if (currentIndex == row.length) clearInterval(Intervalo)
-
-
-  // })

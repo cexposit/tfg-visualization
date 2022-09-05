@@ -16,7 +16,6 @@
         <v-col cols="3" md="3">
           <p>
             <v-file-input width="50px" v-on:change="ReadFichero(json_msg)" type="file" id="File"></v-file-input>
-            <!-- <v-file-input width="50px" type="file" id="File"></v-file-input> -->
           </p>
         </v-col>
         <v-col>
@@ -24,12 +23,10 @@
         </v-col>
       </v-row>
     </v-container>
-      
-    <!-- <v-btn v-on:change="ReadFichero">Subir Fichero</v-btn>  -->
+
   </v-app-bar>
 
 
-  <!-- </v-app> -->
 </template>
 
 <script>
@@ -51,7 +48,6 @@ export default {
     ]),
 
     ReadFichero() {
-      // let connection = this.get_ws()
       var fileUploaded = document.getElementById("File").files[0];
       var fileReader = new FileReader();
       var _this = this
@@ -59,10 +55,7 @@ export default {
       fileReader.onload = function (fileLoadEvent) {
         var fileContent = fileLoadEvent.target.result;
          _this.json_msg = fileContent
-        // return this.json_msg
-        // connection.send(JSON.stringify(fileContent));
       }
-
       fileReader.readAsText(fileUploaded, "UTF-8")
     },
 
