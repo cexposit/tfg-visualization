@@ -21,57 +21,36 @@ function createLogTable() {
   pool.query('CREATE TABLE IF NOT EXISTS logschemes (id BIGSERIAL, schemename_user varchar(500) UNIQUE NOT NULL, tablename_server varchar(500) NOT NULL UNIQUE)')
 }
 
-async function sendDataWithPostgresSQL(client, scheme_user, minimo, includemin, maximo, includemax, ws) {
+  async function sendDataWithPostgresSQL(client, current_table, minimo, includemin, maximo, includemax, pos) {
 
-  const current_table = await pool.query("SELECT tablename_server FROM logschemes WHERE schemename_user = '" + scheme_user + "'")
-
-  pool.connect(err => {
-    if (err) throw err;
-    else {
       let query;
-      let size = 0;
-      var intervalID = setInterval(function () {
-        if (ws.readyState === WebSocket.OPEN) {
-          if (includemin == true) {
-            if (includemax == true) {
-              query = `SELECT * FROM ${current_table.rows[0].tablename_server} WHERE time >= to_timestamp('` + minimo + "', 'YYYY-MM-DD hh24:mi:ss')::timestamp without time zone AND time <= to_timestamp('" + maximo + "', 'YYYY-MM-DD hh24:mi:ss')::timestamp without time zone limit 1 offset " + size + ";";
-            }
-            else {
-              query = `SELECT * FROM ${current_table.rows[0].tablename_server} WHERE time >= to_timestamp('` + minimo + "', 'YYYY-MM-DD hh24:mi:ss')::timestamp without time zone AND time < to_timestamp('" + maximo + "', 'YYYY-MM-DD hh24:mi:ss')::timestamp without time zone limit 1 offset " + size + ";";
-            }
-          } else {
-            if (includemax == true) {
-              query = `SELECT * FROM ${current_table.rows[0].tablename_server} WHERE time > to_timestamp('` + minimo + "', 'YYYY-MM-DD hh24:mi:ss')::timestamp without time zone AND time <= to_timestamp('" + maximo + "', 'YYYY-MM-DD hh24:mi:ss')::timestamp without time zone limit 1 offset " + size + ";";
-            }
-            else {
-              query = `SELECT * FROM ${current_table.rows[0].tablename_server} WHERE time > to_timestamp('` + minimo + "', 'YYYY-MM-DD hh24:mi:ss')::timestamp without time zone AND time < to_timestamp('" + maximo + "', 'YYYY-MM-DD hh24:mi:ss')::timestamp without time zone limit 1 offset " + size + ";";
-            }
-          }
-          console.log("La query mira: ", query)
-          pool.query(query).then(result => {
-            const rows = result.rows;
-            console.log("Lo que trae: ", rows[0])
-            if (rows.length > 0) {
-              client.ws.send(JSON.stringify(rows[0]));
-              size++
-            }
-            // rows.forEach(row => {
-            //     const newRow = row
-            //     newRow["type"]="query"
-
-            //     const data = (JSON.stringify(newRow));
-            //     client.ws.send(data);
-            // });
-          }).catch(err => {
-            console.log(err);
-          })
+      if (includemin == true) {
+        if (includemax == true) {
+          query = `SELECT * FROM ${current_table.rows[0].tablename_server} WHERE time >= to_timestamp('` + minimo + "', 'YYYY-MM-DD hh24:mi:ss')::timestamp without time zone AND time <= to_timestamp('" + maximo + "', 'YYYY-MM-DD hh24:mi:ss')::timestamp without time zone limit 5 offset " + pos + ";";
         }
-      }, 1000);
-      // const text = 'INSERT INTO ' + current_table.rows[0].tablename_server + '(time, status) VALUES($1, $2)'
-      // console.log(`Running query to PostgreSQL server: ${connectionData.host}`);
+        else {
+          query = `SELECT * FROM ${current_table.rows[0].tablename_server} WHERE time >= to_timestamp('` + minimo + "', 'YYYY-MM-DD hh24:mi:ss')::timestamp without time zone AND time < to_timestamp('" + maximo + "', 'YYYY-MM-DD hh24:mi:ss')::timestamp without time zone limit 5 offset " + pos + ";";
+        }
+      } else {
+        if (includemax == true) {
+          query = `SELECT * FROM ${current_table.rows[0].tablename_server} WHERE time > to_timestamp('` + minimo + "', 'YYYY-MM-DD hh24:mi:ss')::timestamp without time zone AND time <= to_timestamp('" + maximo + "', 'YYYY-MM-DD hh24:mi:ss')::timestamp without time zone limit 5 offset " + pos + ";";
+        }
+        else {
+          query = `SELECT * FROM ${current_table.rows[0].tablename_server} WHERE time > to_timestamp('` + minimo + "', 'YYYY-MM-DD hh24:mi:ss')::timestamp without time zone AND time < to_timestamp('" + maximo + "', 'YYYY-MM-DD hh24:mi:ss')::timestamp without time zone limit 5 offset " + pos + ";";
+        }
+      }
+      console.log("La query: ", query)
+      pool.query(query).then(result => {
+        const rows = result.rows;
+        if (rows.length > 0){
+          console.log("Row: ", rows)
+          client.ws.send(JSON.stringify(rows));
+        }else
+          console.log("WAITING")
 
-    }
-  })
+      }).catch(err => {
+        console.log("error: ", err);
+      })
 }
 
 async function create_table(table_name, ws) {
@@ -140,6 +119,8 @@ wss.on('connection', function (websocket) {
     console.log("Client Disconnected!")
   })
 
+  let previous_scheme
+  let current_table
 
   var client_uuid = uuid.v4()
   var client = { 'id': client_uuid, 'ws': websocket }
@@ -148,12 +129,17 @@ wss.on('connection', function (websocket) {
 
   sendSchemeName(websocket)
 
-  websocket.on('message', function incoming(message) {
+  websocket.on('message', async function incoming(message) {
     console.log("message: ", message)
     json_message = JSON.parse(message)
     //Evaulation of message
     if (json_message.min != undefined) {
-      sendDataWithPostgresSQL(client, json_message.scheme, json_message.min, json_message.include_min, json_message.max, json_message.include_max, websocket)
+      const current_scheme= json_message.scheme
+      if (previous_scheme != current_scheme ){
+        previous_scheme = current_scheme
+        current_table = await pool.query("SELECT tablename_server FROM logschemes WHERE schemename_user = '" + current_scheme + "'")
+      }
+      sendDataWithPostgresSQL(client, current_table, json_message.min, json_message.include_min, json_message.max, json_message.include_max, json_message.pos)
     } else {
       insertDataIntoDB(json_message, websocket)
     }

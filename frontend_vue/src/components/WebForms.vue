@@ -77,14 +77,14 @@ export default {
       check_dataset: this.get_data,
       current_scheme: null,
       radioGroup: 1,
-      keys_datos: []
+      keys_datos: [],
     }
   },
 
   computed: {
     ...mapGetters([
       'get_data',
-      'get_sizedata_from_server'
+      'get_posdata_from_server'
     ]),
     count() {
       return this.get_data.length
@@ -101,6 +101,7 @@ export default {
         "include_min": this.include_fd,
         "max": this.last_date,
         "include_max": this.include_ld,
+        "pos": this.get_posdata_from_server
       }
       obj = JSON.stringify(obj)
       this.send_to_back(obj)
@@ -538,44 +539,44 @@ export default {
     ]),
   },
 
-  // watch: {
-  //   async count(newCount) {
-  //     if (newCount < 3) {
-  //       let obj = {
-  //         "scheme": this.current_scheme,
-  //         "min": this.first_date,
-  //         "include_min": this.include_fd,
-  //         "max": this.last_date,
-  //         "include_max": this.include_ld,
-  //         "size": this.get_sizedata_from_server
-  //       }
-  //       obj = JSON.stringify(obj)
-  //       this.send_to_back(obj)
-  //     }
+  watch: {
+    async count(newCount) {
+      if (newCount <= 3) {
+        let obj = {
+          "scheme": this.current_scheme,
+          "min": this.first_date,
+          "include_min": this.include_fd,
+          "max": this.last_date,
+          "include_max": this.include_ld,
+          "pos": this.get_posdata_from_server
+        }
+        obj = JSON.stringify(obj)
+        this.send_to_back(obj)
+      }
 
-  //     let newData = false
-  //     let size = this.get_sizedata_from_server
+      // let newData = false
+      let pos = this.get_posdata_from_server
 
-  //     while (newCount == 0 && size == this.get_sizedata_from_server){
-  //       newData = true
-  //       let obj = {
-  //         "scheme": this.current_scheme,
-  //         "min": this.first_date,
-  //         "include_min": this.include_fd,
-  //         "max": this.last_date,
-  //         "include_max": this.include_ld,
-  //         "size": this.get_sizedata_from_server
-  //       }
-  //       obj = JSON.stringify(obj)
-  //       this.send_to_back(obj)
-  //       await this.sleep(10000)
-  //     }
+      while (newCount == 0 && pos == this.get_posdata_from_server){
+        // newData = true
+        let obj = {
+          "scheme": this.current_scheme,
+          "min": this.first_date,
+          "include_min": this.include_fd,
+          "max": this.last_date,
+          "include_max": this.include_ld,
+          "pos": this.get_posdata_from_server
+        }
+        obj = JSON.stringify(obj)
+        this.send_to_back(obj)
+        await this.sleep(10000)
+      }
 
-  //     if (newData)
-  //     this.show(false)
+      // if (newData)
+      //   this.show(false)
 
-  //   }
-  // }
+    }
+  }
 }
 </script>
 

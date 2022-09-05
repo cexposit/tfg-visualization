@@ -5,22 +5,25 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     ws_connection: new WebSocket("ws://localhost:8181/"),
-    sizedata_from_server: 0,
+    posdata_from_server: 0,
     schemes_db: [],
     data: [],
+    
   },
   mutations: {
     update_schemes(state, payload) {
       state.schemes_db.push(payload)
     },
-    update_sizedata_from_server(state, payload) {
-      state.sizedata_from_server += payload
+    update_posdata_from_server(state, payload) {
+      state.posdata_from_server += payload
     },
     send_data(state, payload) {
       state.ws_connection.send(payload)
     },
     save_data(state, payload) {
-      state.data.push(payload)
+      let data = state.data
+      payload.forEach(d => data.push(d))
+      state.data = data
     },
     enable_btn(state) {
       state.btn_disabled = false
@@ -40,8 +43,8 @@ export default new Vuex.Store({
     get_data: function (state) {
       return state.data
     },
-    get_sizedata_from_server: function (state) {
-      return state.sizedata_from_server
+    get_posdata_from_server: function (state) {
+      return state.posdata_from_server
     }
   },
 
@@ -63,6 +66,7 @@ export default new Vuex.Store({
         }
         else {
           commit('save_data', objeto)
+          commit('update_posdata_from_server', objeto.length)
         }
       }
     },
